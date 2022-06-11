@@ -1,0 +1,12 @@
+#coding=utf-8
+from pathlib import Path
+from pdfScanner import pdfToTextConv
+
+# Получение пути расположения проекта
+progPath = Path.home() / 'source' / 'repos' / 'pdfScanner' / 'pdfScanner'
+# Получение пути расположения PDF файла
+pdfDocPath = progPath / 'Document-2022-05-16-192805.pdf'
+# Задание пути расположения txt файла
+dataTextPath = progPath / 'dataText.txt'
+
+pdfToTextConv(pdfDocPath, dataTextPath)

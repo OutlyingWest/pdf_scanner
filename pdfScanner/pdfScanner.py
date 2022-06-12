@@ -1,14 +1,15 @@
 #coding=utf-8
-from pathlib import Path
+#from pathlib import Path
+import os
 import fitz
 
 def main():
-    pdfDocPath, dataTextPath = setPath()
+    pdfDocPath, dataTextPath = getPath()
     pdfToTextConv(pdfDocPath, dataTextPath)
     
 
 
-def setPath():
+def getPath():
     '''
     Getting the full path to the PDF file to parse
     and to the txt file which contains the data of PDF
@@ -16,11 +17,12 @@ def setPath():
     :return: pdfDocPath, dataTextPath
     '''
     # Получение пути расположения проекта
-    progPath = Path.home() / 'source' / 'repos' / 'pdfScanner' / 'pdfScanner'
-    # Получение пути расположения PDF файла
-    pdfDocPath = progPath / 'Document-2022-05-16-192805.pdf'
+    progName = os.path.basename(__file__)
+    progPath = os.path.abspath(__file__).replace(progName, '')
+    # Получение полного пути расположения PDF файла (должен находиться в папке проекта)
+    pdfDocPath = progPath + 'Document-2022-05-16-192805.pdf'
     # Задание пути расположения txt файла
-    dataTextPath = progPath / 'dataText.txt'
+    dataTextPath = progPath + 'dataText.txt'
     return pdfDocPath, dataTextPath
 
 
@@ -43,6 +45,9 @@ def pdfToTextConv(pdfPath ,textPath):
     
     else:
         print('Sucssesful! PDF to txt conversion completed.')
+
+
+
 
 
 if __name__ == "__main__":

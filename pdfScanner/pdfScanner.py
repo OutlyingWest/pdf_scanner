@@ -52,6 +52,20 @@ def parserData():
     '''
     This function open txt file with data extracted from PDF
     and allocate this into categories.
+    Income:
+        Wages
+        Grants
+        Other profit
+    Expense:
+        Food:
+            Restoraunts
+            Delivery
+            Grocer
+        Sport:
+            Trainings
+            Equipment
+        Technique:
+        Clothes:
     '''
     pass
 

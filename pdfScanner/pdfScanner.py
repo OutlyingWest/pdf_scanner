@@ -1,5 +1,3 @@
-#coding=utf-8
-#from pathlib import Path
 import os
 import fitz
 
@@ -16,28 +14,32 @@ def getPath():
     Return tuple:
     :return: pdfDocPath, dataTextPath
     '''
-    # Получение пути расположения проекта
+    # Gets the path to script file
     progName = os.path.basename(__file__)
     progPath = os.path.abspath(__file__).replace(progName, '')
-    # Получение полного пути расположения PDF файла (должен находиться в папке проекта)
+    # path to PDF file (in the same with the script directory)
     pdfDocPath = progPath + 'Document-2022-05-16-192805.pdf'
-    # Задание пути расположения txt файла
+    # path to txt file (in the same with the script directory)
     dataTextPath = progPath + 'dataText.txt'
     return pdfDocPath, dataTextPath
 
 
-def pdfToTextConv(pdfPath ,textPath):
-    # Открытие PDF документа
+def pdfToTextConv(pdfPath : str ,textPath : str):
+    '''
+    This function gets the two path. 
+    First path - to the PDF file which to be converted
+    Second path - to the txt file wich contains the data from PDF
+    '''
     try:
+        # Saved open the PDF
         with fitz.open(pdfPath) as pdf: 
-            # Открытие txt документа
+            # Open txt file to writing
             txtHandle = open(textPath, "wb")
-            # Cписок для хранения информации со страниц
+            # List of data from PDF
             allText = []
-            # Считывание текста с проходом по всем страницам
+            # Circule of getting the data
             for numPage in range(len(pdf)):
                 page = pdf.load_page(numPage)
-                # Тут каждый раз добавляется новый элемент списка (можно оптимизировать отказавшись от списка) 
                 allText.append(page.get_text().encode("utf8"))
                 txtHandle.write(allText[numPage])
     except:

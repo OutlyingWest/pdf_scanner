@@ -48,7 +48,19 @@ def pdfToTextConv(pdfPath : str ,textPath : str):
     else:
         print('Sucssesful! PDF to txt conversion completed.')
 
+def parserData():
+    '''
+    This function open txt file with data extracted from PDF
+    and allocate this into categories.
+    '''
+    pass
 
+def googleSpreadDrawer():
+    '''
+    This function send the data to be allocated into categories
+    to the google table and drawing itself.
+    '''
+    pass
 
 
 

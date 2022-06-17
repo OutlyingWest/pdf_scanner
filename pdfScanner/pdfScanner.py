@@ -1,9 +1,11 @@
 import os
 import fitz
+from collections import namedtuple
 
 def main():
     pdfDocPath, dataTextPath = getPath()
     pdfToTextConv(pdfDocPath, dataTextPath)
+    parserData(dataTextPath)
     
 
 
@@ -48,7 +50,8 @@ def pdfToTextConv(pdfPath : str ,textPath : str):
     else:
         print('Sucssesful! PDF to txt conversion completed.')
 
-def parserData():
+
+def parserData(textPath : str):
     '''
     This function open txt file with data extracted from PDF
     and allocate this into categories.
@@ -67,6 +70,47 @@ def parserData():
         Technique:
         Clothes:
     '''
+    # Income:
+    wages = ['Wages', 0] 
+    grants = ['Grants', 0]
+    otherProfit = ['Other profit', 0]
+
+    Income = namedtuple('Income', ('Wages', 'Grants', 'OtherProfit'))
+    income = Income(wages, grants, otherProfit)
+
+    # Expense:
+    technique = ['Technique', 0]
+    clothes = ['Clothes', 0]
+
+    #   Food:
+    restoraunts = ['Restoraunts', 0]
+    delivery = ['Delivery', 0]
+    grocer = ['Grocer', 0] 
+
+    Food = namedtuple('Food', ('Restoraunts', 'Delivery', 'Grocer'))
+    food = Food(restoraunts, delivery, grocer)
+
+    #   Sport:
+    trainings = ['Trainings', 0]
+    equipment = ['Equipment', 0]
+
+    Sport = namedtuple('Sport', ('Trainings','Equipment'))
+    sport = Sport(trainings, equipment)
+
+
+
+    # Construct Expense
+    Expense = namedtuple('Expense', ('Food', 'Sport', 'Technique', 'Clothes'))
+    expense = Expense(food, sport, technique, clothes)
+
+
+    # Data:
+    Data = namedtuple('Data', ('Income', 'Expense'))
+    data = Data(income, expense)
+    
+    print(data.Income)
+
+
     pass
 
 def googleSpreadDrawer():

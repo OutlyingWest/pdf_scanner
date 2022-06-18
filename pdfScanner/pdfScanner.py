@@ -1,6 +1,6 @@
 import os
 import fitz
-from collections import namedtuple
+import re
 
 def main():
     pdfDocPath, dataTextPath = getPath()
@@ -70,47 +70,41 @@ def parserData(textPath : str):
         Technique:
         Clothes:
     '''
-    # Income:
-    wages = ['Wages', 0] 
-    grants = ['Grants', 0]
-    otherProfit = ['Other profit', 0]
+    data = {'Income' : {'Wages' : 0,
+                       'Grants' : 0,
+                       'OtherProfit' : 0,
+                       'Summary' : 0,},
 
-    Income = namedtuple('Income', ('Wages', 'Grants', 'OtherProfit'))
-    income = Income(wages, grants, otherProfit)
+            'Expense' : {'Food' : {'Restoraunts' : 0,
+                                   'Delivery' : 0,
+                                   'Grocer' : 0},
 
-    # Expense:
-    technique = ['Technique', 0]
-    clothes = ['Clothes', 0]
+                         'Sport' : {'Trainings' : 0,
+                                    'Equipment' : 0,},
 
-    #   Food:
-    restoraunts = ['Restoraunts', 0]
-    delivery = ['Delivery', 0]
-    grocer = ['Grocer', 0] 
+                        'Technique' : 0,
+                        'Clothes' : 0,                       
+                        'Summary' : 0,},
 
-    Food = namedtuple('Food', ('Restoraunts', 'Delivery', 'Grocer'))
-    food = Food(restoraunts, delivery, grocer)
+            'EndBalance' : 0,}
 
-    #   Sport:
-    trainings = ['Trainings', 0]
-    equipment = ['Equipment', 0]
-
-    Sport = namedtuple('Sport', ('Trainings','Equipment'))
-    sport = Sport(trainings, equipment)
-
-
-
-    # Construct Expense
-    Expense = namedtuple('Expense', ('Food', 'Sport', 'Technique', 'Clothes'))
-    expense = Expense(food, sport, technique, clothes)
+    with open(textPath, 'r', encoding='utf-8') as ptxt:
+        pattern = ''
+        nextStep = False
+        for line in ptxt:
+            # It is regular expression search if form ("regular expression", "line of text file")
+            finded = re.search('Transport', line)
+            # Logic of allign for going to line with money operation 
+            if finded:
+                print(finded.group())
+                nextStep = True
+            elif nextStep == True:
+                print(line)
+                nextStep = False
 
 
-    # Data:
-    Data = namedtuple('Data', ('Income', 'Expense'))
-    data = Data(income, expense)
     
-    print(data.Income)
-
-
+        
     pass
 
 def googleSpreadDrawer():

@@ -4,8 +4,9 @@ import fitz
 import re
 
 def main():
-    pdfDocPath, dataTextPath = getPath()
+    pdfDocPath, dataTextPath, regexPath = getPath()
     pdfToTextConv(pdfDocPath, dataTextPath)
+    dataDictInit(regexPath)
     parserData(dataTextPath)
     
 
@@ -24,7 +25,8 @@ def getPath():
     pdfDocPath = progPath + 'Document-2022-05-16-192805.pdf'
     # path to txt file (in the same with the script directory)
     dataTextPath = progPath + 'dataText.txt'
-    return pdfDocPath, dataTextPath
+    regexPath = progPath + 'regex.txt'
+    return pdfDocPath, dataTextPath, regexPath
 
 
 def pdfToTextConv(pdfPath : str ,textPath : str):
@@ -52,15 +54,18 @@ def pdfToTextConv(pdfPath : str ,textPath : str):
         print('Sucssesful! PDF to txt conversion completed.')
 
 
-def parserData(textPath : str):
+def dataDictInit(regexPath : str):
     '''
-    This function open txt file with data extracted from PDF
-    and allocate this into categories.
-    Income:
+     This function of initialisation of data dictionary.
+     Initialisation comprise regular expressions for all categories.
+     Regular expressions keeps in the text file named regex.txt.
+
+     Structure of the data dictionary:
+     Income:
         Wages
         Grants
         Other profit
-    Expense:
+     Expense:
         Food:
             Restoraunts
             Delivery
@@ -71,6 +76,21 @@ def parserData(textPath : str):
         Technique:
         Clothes:
     '''
+    try:
+        # Saved open the PDF
+        with open(regexPath, 'r', encoding='utf-8') as prg: 
+            for regLines in prg:
+                pass
+    except:
+        print('regex.txt is not found')
+
+
+def parserData(textPath : str):
+    '''
+    This function open txt file with data extracted from PDF
+    and allocate this into categories according to regular expressions by file regex.txt..
+    '''
+
     data = {'Income' : {'Wages' : {'pattern' : '',
                                    'value' : 0},
 

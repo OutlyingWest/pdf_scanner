@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import fitz
 import re
@@ -42,7 +43,7 @@ def pdfToTextConv(pdfPath : str ,textPath : str):
             # Circule of getting the data
             for numPage in range(len(pdf)):
                 page = pdf.load_page(numPage)
-                allText.append(page.get_text().encode("utf8"))
+                allText.append(page.get_text().encode('utf-8'))
                 txtHandle.write(allText[numPage])
     except:
         print('Oh no! PDF to txt conversion is failed.')
@@ -70,30 +71,50 @@ def parserData(textPath : str):
         Technique:
         Clothes:
     '''
-    data = {'Income' : {'Wages' : 0,
-                       'Grants' : 0,
-                       'OtherProfit' : 0,
-                       'Summary' : 0,},
+    data = {'Income' : {'Wages' : {'pattern' : '',
+                                   'value' : 0},
 
-            'Expense' : {'Food' : {'Restoraunts' : 0,
-                                   'Delivery' : 0,
-                                   'Grocer' : 0},
+                        'Grants' : {'pattern' : '',
+                                    'value' : 0},
 
-                         'Sport' : {'Trainings' : 0,
-                                    'Equipment' : 0,},
+                        'OtherProfit' : {'pattern' : '',
+                                         'value' : 0},
 
-                        'Technique' : 0,
-                        'Clothes' : 0,                       
-                        'Summary' : 0,},
+                        'Summary' : {'pattern' : '',
+                                     'value' : 0},},
 
-            'EndBalance' : 0,}
+            'Expense' : {'Food' : {'Restoraunts' : {'pattern' : '',
+                                                    'value' : 0},
+
+                                   'Delivery' : {'pattern' : '',
+                                                 'value' : 0},
+
+                                   'Grocer' : {'pattern' : '',
+                                               'value' : 0},},
+
+                         'Sport' : {'Trainings' : {'pattern' : '',
+                                                   'value' : 0},
+
+                                    'Equipment' : {'pattern' : '',
+                                                    'value' : 0},},
+
+                         'Technique' : {'pattern' : '',
+                                        'value' : 0},
+
+                         'Clothes' : {'pattern' : '',
+                                      'value' : 0},      
+                         
+                         'Summary' : {'pattern' : '',
+                                      'value' : 0},},
+
+            'EndBalance' : {'pattern' : '',
+                            'value' : 0},}
 
     with open(textPath, 'r', encoding='utf-8') as ptxt:
-        pattern = ''
         nextStep = False
         for line in ptxt:
             # It is regular expression search if form ("regular expression", "line of text file")
-            finded = re.search('Transport', line)
+            finded = re.search('\+\d+\S\d+', line)
             # Logic of allign for going to line with money operation 
             if finded:
                 print(finded.group())

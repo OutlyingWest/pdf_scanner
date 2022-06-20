@@ -6,8 +6,8 @@ import re
 def main():
     pdfDocPath, dataTextPath, regexPath = getPath()
     pdfToTextConv(pdfDocPath, dataTextPath)
-    dataDictInit(regexPath)
-    parserData(dataTextPath)
+    dictData = dataDictInit(regexPath)
+    parserData(dataTextPath, dictData)
     
 
 
@@ -76,62 +76,6 @@ def dataDictInit(regexPath : str):
         Technique:
         Clothes:
     '''
-    try:
-        # Saved open the PDF
-        with open(regexPath, 'r', encoding='utf-8') as prg: 
-            for regLines in prg:
-                pass
-    except:
-        print('regex.txt is not found')
-
-
-
-def goThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False, lengthData=None):
-    '''
-    This function accepts a dictionary, a keyword of this dictionary and a tuple of data
-    that must be filling in accordance with this keyword. In the tuple of data
-    may be wrided several values, that will allocated in order of tuple's structure
-    (Warning! This function is for use in Python 3.7 and lastest, in eariler version it's behavior is unpredictable)
-
-    :param object: Dictionary for fill in that
-    :param keyword: The keyword that is being searched for 
-    :param inputData: Data posted in accordance with keyword
-    :param isPrint: Allow printing the changes in dictionary if True, else False by default
-    :param lengthData: There is no need to enter. Calculates automatically! Beeng utilized for internal needs
-
-    :return: lengthData It's not filled with meaning. Beeng utilized for internal needs
-    '''
-    if lengthData == None:
-        lengthData = len(inputData)
-    # if object is - dictionary, then analyze all values of dictionary for them keys
-    if isinstance(object, dict):
-        for key in object:
-            if isPrint:
-                print(key, '-> ', end='')
-            # Recursive function call to itself. Allows to go through the nested dictionary 
-            lengthData = goThroughDict(object[key], keyword, inputData, isPrint, lengthData)
-
-            if key == keyword:
-                # Reverse the tuple in order to fill values in right order (:
-                revInputData = tuple(reversed(inputData))
-                # Decrement lengthData to go through the inputData tuple
-                lengthData -= 1
-                if lengthData < 0:
-                    print('Incorrect param: lengthData = ', lengthData, ' Error: out of range')
-                    exit()
-                # Filling the values of dictionary
-                object[key] = revInputData[lengthData]
-                if isPrint:
-                    print(object[key])
-    # Returns length of tuple that contains data for fill the values of dict 
-    return lengthData
-
-
-def parserData(textPath : str):
-    '''
-    This function open txt file with data extracted from PDF
-    and allocate this into categories according to regular expressions by file regex.txt..
-    '''
 
     data = {'Income' : {'Wages' : {'pattern' : '',
                                    'value' : 0},
@@ -171,6 +115,25 @@ def parserData(textPath : str):
 
             'EndBalance' : {'pattern' : '',
                             'value' : 0},}
+    # Saved open the PDF
+    try:
+        with open(regexPath, 'r', encoding='utf-8') as prgx:
+            # Creation a fixed length list 
+            regexList = tuple([regLine.rstrip('\n') for regLine in prgx])
+            print(regexList)
+            #for nline, regLine in enumerate(prgx):
+            #    regexList[nline] = regLine
+    except:
+        print('regex.txt is not found')
+
+    return data
+
+
+def parserData(textPath : str, dictData : dict):
+    '''
+    This function open txt file with data extracted from PDF
+    and allocate this into categories according to regular expressions by file regex.txt..
+    '''
 
     with open(textPath, 'r', encoding='utf-8') as ptxt:
         nextStep = False
@@ -190,6 +153,7 @@ def parserData(textPath : str):
         
     pass
 
+
 def googleSpreadDrawer():
     '''
     This function send the data to be allocated into categories
@@ -197,6 +161,47 @@ def googleSpreadDrawer():
     '''
     pass
 
+
+# ------- Later may be in other module --------
+def goThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False, lengthData=None):
+    '''
+    This function accepts a dictionary, a keyword of this dictionary and a tuple of data
+    that must be filling in accordance with this keyword. In the tuple of data
+    may be wrided several values, that will allocated in order of tuple's structure
+    (Warning! This function is for use in Python 3.7 and lastest, in eariler version it's behavior is unpredictable)
+
+    :param object: Dictionary for fill in that
+    :param keyword: The keyword that is being searched for 
+    :param inputData: Data posted in accordance with keyword
+    :param isPrint: Allow printing the changes in dictionary if True, else False by default
+    :param lengthData: There is no need to enter. Calculates automatically! Beeng utilized for internal needs
+
+    :return: lengthData It's not filled with meaning. Beeng utilized for internal needs
+    '''
+    if lengthData == None:
+        lengthData = len(inputData)
+    # if object is - dictionary, then analyze all values of dictionary for them keys
+    if isinstance(object, dict):
+        for key in object:
+            if isPrint:
+                print(key, '-> ', end='')
+            # Recursive function call to itself. Allows to go through the nested dictionary 
+            lengthData = goThroughDict(object[key], keyword, inputData, isPrint, lengthData)
+
+            if key == keyword:
+                # Reverse the tuple in order to fill values in right order (:
+                revInputData = tuple(reversed(inputData))
+                # Decrement lengthData to go through the inputData tuple
+                lengthData -= 1
+                if lengthData < 0:
+                    print('Incorrect param: lengthData = ', lengthData, ' Error: out of range')
+                    exit()
+                # Filling the values of dictionary
+                object[key] = revInputData[lengthData]
+                if isPrint:
+                    print(object[key])
+    # Returns length of tuple that contains data for fill the values of dict 
+    return lengthData
 
 
 if __name__ == "__main__":

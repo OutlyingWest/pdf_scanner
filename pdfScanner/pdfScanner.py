@@ -4,6 +4,15 @@ import fitz
 import re
 
 def main():
+    '''
+    TODO: User may init the tree of find through categories by create his own categories with corresponding regular expressions
+    To start, creates a basic dictionary with simple categories like: 
+    Income:
+    Expense:
+    Balance:
+    New subcategories can be added in dicrionary.
+    End result may be presented in table with drop-down lists of detailed incomes and expenses
+    '''
     pdfDocPath, dataTextPath, regexPath = getPath()
     pdfToTextConv(pdfDocPath, dataTextPath)
     dictData = dataDictInit(regexPath)
@@ -75,6 +84,7 @@ def dataDictInit(regexPath : str):
             Equipment
         Technique:
         Clothes:
+     Balance:
     '''
 
     data = {'Income' : {'Wages' : {'pattern' : '',
@@ -139,7 +149,7 @@ def parserData(textPath : str, dictData : dict):
         nextStep = False
         for line in ptxt:
             # It is regular expression search if form ("regular expression", "line of text file")
-            finded = re.search('\+\d+\S\d+', line)
+            finded = re.search('^2$', line)
             # Logic of allign for going to line with money operation 
             if finded:
                 print(finded.group())

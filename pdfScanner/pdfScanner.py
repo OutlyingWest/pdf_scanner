@@ -144,6 +144,7 @@ def parserData(textPath : str, dictData : dict):
     This function open txt file with data extracted from PDF
     and allocate this into categories according to regular expressions by file regex.txt..
     '''
+    #TODO: Make a function of first cleaning 
 
     with open(textPath, 'r', encoding='utf-8') as ptxt:
         nextStep = False

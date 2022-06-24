@@ -160,12 +160,17 @@ def parserData(textPath : str, dictData : dict):
         for line in ptxt:
 
             if findValue:
-                # TODO: rewrite regex
-                valueFinded = re.search('^\d+,\d\d$', line)
-                if valueFinded:
+                valueIncomeFinded = re.search('^\+\d+\s?\d+,\d\d$', line)
+                valueExpenceFinded = re.search('^\d+\s?\d+,\d\d$', line)
+                if valueIncomeFinded or valueExpenceFinded:
                     findExpr = True
                     findValue = False
-                    print(valueFinded.group())
+                    if valueIncomeFinded:
+                        print(valueIncomeFinded.group(), 'Inc')
+                    elif valueExpenceFinded:
+                        print(valueExpenceFinded.group(), 'Exp')
+                    else:
+                        print('Impossible find')
 
             for regex in regexTupl:
                 # It is regular expression search if form ("regular expression", "line of text file")

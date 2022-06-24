@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-import fitz
+# import fitz
 import re
 
 def main():
@@ -14,7 +14,7 @@ def main():
     End result may be presented in table with drop-down lists of detailed incomes and expenses
     '''
     pdfDocPath, dataTextPath, regexPath = getPath()
-    pdfToTextConv(pdfDocPath, dataTextPath)
+    # pdfToTextConv(pdfDocPath, dataTextPath)
     dictData = dataDictInit(regexPath)
     parserData(dataTextPath, dictData)
     
@@ -84,7 +84,7 @@ def dataDictInit(regexPath : str):
             Equipment
         Technique:
         Clothes:
-     Balance:
+     Balance:   
     '''
 
     data = {'Income' : {'Wages' : {'pattern' : '',
@@ -129,12 +129,14 @@ def dataDictInit(regexPath : str):
     try:
         with open(regexPath, 'r', encoding='utf-8') as prgx:
             # Creation a fixed length list 
-            regexList = tuple([regLine.rstrip('\n') for regLine in prgx])
-            print(regexList)
+            regexTuple = tuple([regLine.rstrip('\n') for regLine in prgx])
+            print(regexTuple)
             #for nline, regLine in enumerate(prgx):
             #    regexList[nline] = regLine
     except:
         print('regex.txt is not found')
+
+    goInputThroughDict(data, 'pattern',  regexTuple)
 
     return data
 
@@ -142,22 +144,41 @@ def dataDictInit(regexPath : str):
 def parserData(textPath : str, dictData : dict):
     '''
     This function open txt file with data extracted from PDF
-    and allocate this into categories according to regular expressions by file regex.txt..
+    and allocate this into categories according to regular expressions by file regex.txt
     '''
     #TODO: Make a function of first cleaning 
+    
+
+
+    
 
     with open(textPath, 'r', encoding='utf-8') as ptxt:
-        nextStep = False
+        # Init the regex tuple from dataDict. Each regex presented as simple strings
+        regexTupl = tuple(goOutThroughDict(dictData, 'pattern',  []))
+        findExpr = True
+        findValue = False
         for line in ptxt:
-            # It is regular expression search if form ("regular expression", "line of text file")
-            finded = re.search('^2$', line)
-            # Logic of allign for going to line with money operation 
-            if finded:
-                print(finded.group())
-                nextStep = True
-            elif nextStep == True:
-                print(line)
-                nextStep = False
+
+            if findValue:
+                # TODO: rewrite regex
+                valueFinded = re.search('^\d+,\d\d$', line)
+                if valueFinded:
+                    findExpr = True
+                    findValue = False
+                    print(valueFinded.group())
+
+            for regex in regexTupl:
+                # It is regular expression search if form ("regular expression", "line of text file")
+                if findExpr:
+                    exprFinded = re.search(regex, line)
+                    if exprFinded:
+                        print(exprFinded.group())
+                        findExpr == False
+                        findValue = True
+                        break
+
+
+                    
 
 
     
@@ -174,7 +195,7 @@ def googleSpreadDrawer():
 
 
 # ------- Later may be in other module --------
-def goThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False, lengthData=None):
+def goInputThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False, lengthData=None):
     '''
     This function accepts a dictionary, a keyword of this dictionary and a tuple of data
     that must be filling in accordance with this keyword. In the tuple of data
@@ -197,7 +218,7 @@ def goThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False
             if isPrint:
                 print(key, '-> ', end='')
             # Recursive function call to itself. Allows to go through the nested dictionary 
-            lengthData = goThroughDict(object[key], keyword, inputData, isPrint, lengthData)
+            lengthData = goInputThroughDict(object[key], keyword, inputData, isPrint, lengthData)
 
             if key == keyword:
                 # Reverse the tuple in order to fill values in right order (:
@@ -213,6 +234,39 @@ def goThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False
                     print(object[key])
     # Returns length of tuple that contains data for fill the values of dict 
     return lengthData
+
+
+def goOutThroughDict(object : dict, keyword : str, isPrint=False, outputData=[]):
+    '''
+    This function accepts a dictionary, a keyword of this dictionary and returns list of data
+    that filling in accordance with accepted keyword.
+    (Warning! This function is for use in Python 3.7 and lastest, in eariler version it's behavior is unpredictable)
+
+    :param object: Dictionary for read of that
+    :param keyword: The keyword that is being searched for 
+    :param isPrint: Allow printing the changes in dictionary if True, else False by default
+    :param outputData: List in wich data reads in accordance with keyword (shouldn't set!) Beeng utilized for internal needs.
+
+    :return: outputData list
+    '''
+    
+    # if object is - dictionary, then analyze all values of dictionary for them keys
+    if isinstance(object, dict):
+        for key in object:
+            if isPrint:
+                print(key, '-> ', end='')
+            # Recursive function call to itself. Allows to go through the nested dictionary 
+            outputData = goOutThroughDict(object[key], keyword, isPrint, outputData)
+
+            if key == keyword:
+                # Filling the values of dictionary
+                outputData.append(object[key])
+                if isPrint:
+                    print(object[key])
+    # Returns list that contains data allocated in accordance with accepted keyword.
+    return outputData
+
+
 
 
 if __name__ == "__main__":

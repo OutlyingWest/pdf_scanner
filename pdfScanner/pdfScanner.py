@@ -157,21 +157,22 @@ def parserData(textPath : str, dictData : dict):
         findExpr = True
         findValue = False
         for line in ptxt:
+            # TODO: Solve "1" problem
             if findValue:
-                valueIncomeFinded = re.search('^\+\d+\s?\d+,\d\d$', line)
-                valueExpenceFinded = re.search('^\d+\s?\d+,\d\d$', line)
+                valueIncomeFinded = re.search('^\+\d*\s?\d+,\d\d$', line)
+                valueExpenceFinded = re.search('^\d*\s?\d+,\d\d$', line)
                 if valueIncomeFinded or valueExpenceFinded:
                     findExpr = True
                     findValue = False
-                    # Needs in if or not?
+                    numdLine = float(re.sub('(\D)|(\d\d$)', '', line))
                     if valueIncomeFinded:
                         print(valueIncomeFinded.group(), 'Inc')
                         # Summ values according order of regex 
                         # TODO: converse string of numbers in number
-                        valueList[numreg]
+                        valueList[numreg] += numdLine
                     elif valueExpenceFinded:
                         print(valueExpenceFinded.group(), 'Exp')
-                        valueList[numreg]
+                        valueList[numreg] += numdLine
                     else:
                         print('Impossible find!!!')
             # Iterating over regular expressions 

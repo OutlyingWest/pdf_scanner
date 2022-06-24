@@ -150,11 +150,10 @@ def parserData(textPath : str, dictData : dict):
     
 
 
-    
-
+    # Init the regex tuple from dataDict. Each regex presented as simple strings
+    regexTupl = tuple(goOutThroughDict(dictData, 'pattern',  []))
+    valueList = [0] * len(regexTupl)
     with open(textPath, 'r', encoding='utf-8') as ptxt:
-        # Init the regex tuple from dataDict. Each regex presented as simple strings
-        regexTupl = tuple(goOutThroughDict(dictData, 'pattern',  []))
         findExpr = True
         findValue = False
         for line in ptxt:
@@ -164,14 +163,19 @@ def parserData(textPath : str, dictData : dict):
                 if valueIncomeFinded or valueExpenceFinded:
                     findExpr = True
                     findValue = False
+                    # Needs in if or not?
                     if valueIncomeFinded:
                         print(valueIncomeFinded.group(), 'Inc')
+                        # Summ values according order of regex 
+                        # TODO: converse string of numbers in number
+                        valueList[numreg]
                     elif valueExpenceFinded:
                         print(valueExpenceFinded.group(), 'Exp')
+                        valueList[numreg]
                     else:
                         print('Impossible find!!!')
             # Iterating over regular expressions 
-            for regex in regexTupl:
+            for numreg, regex in enumerate(regexTupl):
                 # It is regular expression search if form ("regular expression", "line of text file")
                 if findExpr:
                     exprFinded = re.search(regex, line)
@@ -180,13 +184,7 @@ def parserData(textPath : str, dictData : dict):
                         findExpr == False
                         findValue = True
                         break
-
-
-                    
-
-
-    
-        
+    print(valueList)
     pass
 
 

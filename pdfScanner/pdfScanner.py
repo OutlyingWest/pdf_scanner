@@ -135,7 +135,7 @@ def dataDictInit(regexPath : str):
             #    regexList[nline] = regLine
     except:
         print('regex.txt is not found')
-
+    # Fill the data dictionary fields for 'pattern' key
     goInputThroughDict(data, 'pattern',  regexTuple)
 
     return data

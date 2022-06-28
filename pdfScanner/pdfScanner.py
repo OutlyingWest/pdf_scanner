@@ -151,8 +151,12 @@ def parserData(textPath : str, dictData : dict):
 
 
     # Init the regex tuple from dataDict. Each regex presented as simple strings
-    regexTupl = tuple(goOutThroughDict(dictData, 'pattern',  []))
+    regexTupl = tuple(goOutThroughDict(dictData, 'pattern'))
     valueList = [0] * len(regexTupl)
+
+    # Getting keys located with accordance on higher level key - 'Income' and count them
+    numIncome = len(dictData['Income'].keys())
+
     with open(textPath, 'r', encoding='utf-8') as ptxt:
         findExpr = True
         findValue = False
@@ -161,21 +165,27 @@ def parserData(textPath : str, dictData : dict):
             if findValue:
                 valueIncomeFinded = re.search('^\+\d*\s?\d+,\d\d$', line)
                 valueExpenceFinded = re.search('^\d*\s?\d+,\d\d$', line)
+
                 if valueIncomeFinded or valueExpenceFinded:
                     findExpr = True
                     findValue = False
                     # Regex for exclude non numberic values
                     numdLine = re.sub('[\+]|[\s]', '', line)
+
                     # Regex for replace "," to "."
                     numdLine = re.sub(',', '.', numdLine)
                     numdLine = float(numdLine)
-                    if valueIncomeFinded:
+
+                    if valueIncomeFinded and numreg < numIncome:
                         print(valueIncomeFinded.group(), 'Inc')
+
                         # Summ values according order of regex 
                         valueList[numreg] += numdLine
-                    elif valueExpenceFinded:
+
+                    elif valueExpenceFinded and numreg >= numIncome:
                         print(valueExpenceFinded.group(), 'Exp')
                         valueList[numreg] += numdLine
+
                     else:
                         print('Impossible find!!!')
             # Iterating over regular expressions 

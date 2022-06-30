@@ -125,16 +125,54 @@ def dataDictInit(regexPath : str):
 
             'EndBalance' : {'pattern' : '',
                             'value' : 0},}
-    # Saved open the PDF
+
+	# Find the positions of Base categories
+    incSumAbsPosition = None
+    for num,category in enumerate(data['Income']):
+        if category == 'Summary':
+            incSumAbsPosition = num
+    
+    expSumPosition = None
+    for num, category in enumerate(data['Expense']):
+        if category == 'Summary':
+            expSumPosition = num
+
+    if  incSumAbsPosition and expSumPosition:
+        expSumAbsPosition = incSumAbsPosition + expSumPosition + 1
+
+    else:
+        expSumAbsPosition = None
+        print('Summary category is not finded')
+
+    print('incSumAbsPosition ', incSumAbsPosition)	
+    print('expSumAbsPosition ', expSumAbsPosition)
+
     try:
+        strList = []
         with open(regexPath, 'r', encoding='utf-8') as prgx:
-            # Creation a fixed length list 
-            regexTuple = tuple([regLine.rstrip('\n') for regLine in prgx])
-            print(regexTuple)
-            #for nline, regLine in enumerate(prgx):
-            #    regexList[nline] = regLine
+            for string in prgx:
+                strList.append(string)	
+
+		# Save open the regex.txt in write mod for includes regex of Base Categories
+        with open(regexPath, 'w', encoding='utf-8') as prgx:
+            for nstr, string in enumerate(prgx):
+                if nstr == incSumAbsPosition: 
+                    prgx.write('^\+\d*\s?\d+,\d\d$' + '\n') 
+                elif nstr == expSumAbsPosition:
+                    prgx.write('^\d*\s?\d+,\d\d$' + '\n')
+                else:
+                    prgx.write(strList[nstr])
     except:
-        print('regex.txt is not found')
+        print('Cannot open regex.txt')
+
+    print('strList = ', strList)
+
+	# Save open the regex.txt in read mod
+    with open(regexPath, 'r', encoding='utf-8') as prgx:
+	    # Creation a fixed length list 
+        regexTuple = tuple([regLine.rstrip('\n') for regLine in prgx])
+        print(regexTuple)
+
     # Fill the data dictionary fields for 'pattern' key
     goInputThroughDict(data, 'pattern',  regexTuple)
 
@@ -156,12 +194,15 @@ def parserData(textPath : str, dictData : dict):
 
     # Getting keys located with accordance on higher level key - 'Income' and count them
     numIncome = len(dictData['Income'].keys())
+	
+    exprBaseGroup = (dictData['Income']['Summary']['pattern'],
+					 dictData['Expense']['Summary']['pattern'],)
 
     with open(textPath, 'r', encoding='utf-8') as ptxt:
         findExpr = True
         findValue = False
         for line in ptxt:
-            # TODO: 
+            # This condition is met when regular expression is finded (under this condition)  
             if findValue:
                 valueIncomeFinded = re.search('^\+\d*\s?\d+,\d\d$', line)
                 valueExpenceFinded = re.search('^\d*\s?\d+,\d\d$', line)
@@ -181,25 +222,40 @@ def parserData(textPath : str, dictData : dict):
 
                         # Summ values according order of regex 
                         valueList[numreg] += numdLine
-
+    
                     elif valueExpenceFinded and numreg >= numIncome:
                         print(valueExpenceFinded.group(), 'Exp')
                         valueList[numreg] += numdLine
 
                     else:
                         print('Impossible find!!!')
+
+		    # This cycle executes at first after starting, on next step findes the value
             # Iterating over regular expressions 
             for numreg, regex in enumerate(regexTupl):
+
                 # It is regular expression search if form ("regular expression", "line of text file")
                 if findExpr:
-                    exprFinded = re.search(regex, line)
+				
+    				# Checking is the current regex includes in the BaseGroup
+                    for exprBase in exprBaseGroup:
+                        exprBaseFinded = re.search(exprBase, line)
+                        if exprBaseFinded:
+                            break
+					
+					# If Base expression is not finded, find the other expressions
+                    if not exprBaseFinded: 
+                        exprFinded = re.search(regex, line)
+
+                    exprBaseFinded = False
+
+					# If expression finded, go to summ in 'value' of finded category 	
                     if exprFinded:
                         print(exprFinded.group())
-                        findExpr == False
+                        findExpr = False
                         findValue = True
                         break
     print(valueList)
-    pass
 
 
 def googleSpreadDrawer():

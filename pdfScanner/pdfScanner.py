@@ -126,15 +126,18 @@ def dataDictInit(regexPath : str):
             'EndBalance' : {'pattern' : '',
                             'value' : 0},}
 
+
 	# Find the positions of Base categories
     incSumAbsPosition = None
     for num,category in enumerate(data['Income']):
         if category == 'Summary':
+            # Find the Income Summary position
             incSumAbsPosition = num
     
     expSumPosition = None
     for num, category in enumerate(data['Expense']):
         if category == 'Summary':
+            # Find the Expense Summary position
             expSumPosition = num
 
     if  incSumAbsPosition and expSumPosition:
@@ -149,29 +152,30 @@ def dataDictInit(regexPath : str):
 
     try:
         strList = []
-        with open(regexPath, 'r', encoding='utf-8') as prgx:
-            for string in prgx:
+        with open(regexPath, 'r', encoding='utf-8') as prgxr:
+            for string in prgxr:
                 strList.append(string)	
-
-		# Save open the regex.txt in write mod for includes regex of Base Categories
-        with open(regexPath, 'w', encoding='utf-8') as prgx:
-            for nstr, string in enumerate(prgx):
-                if nstr == incSumAbsPosition: 
-                    prgx.write('^\+\d*\s?\d+,\d\d$' + '\n') 
-                elif nstr == expSumAbsPosition:
-                    prgx.write('^\d*\s?\d+,\d\d$' + '\n')
-                else:
-                    prgx.write(strList[nstr])
     except:
-        print('Cannot open regex.txt')
+        print('Cannot open regex.txt to read at first')
 
     print('strList = ', strList)
+
+	# Save open the regex.txt in write mod for includes regex of Base Categories
+    with open(regexPath, 'w', encoding='utf-8') as prgxw:
+        for nstr, string in enumerate(strList):
+            if nstr == incSumAbsPosition: 
+                prgxw.write('^\+\d*\s?\d+,\d\d$' + '\n') 
+            elif nstr == expSumAbsPosition:
+                prgxw.write('^\d*\s?\d+,\d\d$' + '\n')
+            else:
+                prgxw.write(strList[nstr])
+
 
 	# Save open the regex.txt in read mod
     with open(regexPath, 'r', encoding='utf-8') as prgx:
 	    # Creation a fixed length list 
         regexTuple = tuple([regLine.rstrip('\n') for regLine in prgx])
-        print(regexTuple)
+        print('regexTuple = ', regexTuple)
 
     # Fill the data dictionary fields for 'pattern' key
     goInputThroughDict(data, 'pattern',  regexTuple)
@@ -195,6 +199,7 @@ def parserData(textPath : str, dictData : dict):
     # Getting keys located with accordance on higher level key - 'Income' and count them
     numIncome = len(dictData['Income'].keys())
 	
+    # Init the regex BaseGroup. Regexes in a BaseGroup will not findes as categories
     exprBaseGroup = (dictData['Income']['Summary']['pattern'],
 					 dictData['Expense']['Summary']['pattern'],)
 
@@ -204,8 +209,8 @@ def parserData(textPath : str, dictData : dict):
         for line in ptxt:
             # This condition is met when regular expression is finded (under this condition)  
             if findValue:
-                valueIncomeFinded = re.search('^\+\d*\s?\d+,\d\d$', line)
-                valueExpenceFinded = re.search('^\d*\s?\d+,\d\d$', line)
+                valueIncomeFinded = re.search(dictData['Income']['Summary']['pattern'], line)
+                valueExpenceFinded = re.search(dictData['Expense']['Summary']['pattern'], line)
 
                 if valueIncomeFinded or valueExpenceFinded:
                     findExpr = True
@@ -238,8 +243,8 @@ def parserData(textPath : str, dictData : dict):
                 if findExpr:
 				
     				# Checking is the current regex includes in the BaseGroup
-                    for exprBase in exprBaseGroup:
-                        exprBaseFinded = re.search(exprBase, line)
+                    for exprBaseRegex in exprBaseGroup:
+                        exprBaseFinded = re.search(exprBaseRegex, line)
                         if exprBaseFinded:
                             break
 					

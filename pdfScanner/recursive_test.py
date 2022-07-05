@@ -1,53 +1,103 @@
-def goOutThroughDict(object : dict, keyword : str, treeLevel, curTreeLevel=0, outputData=[]):
+data = {'Income' : {'Wages' : {'pattern' : '',
+                                'value' : 0},
+
+                    'Grants' : {'pattern' : '',
+                                'value' : 0},
+
+                    'OtherProfit' : {'pattern' : '',
+                                        'value' : 0},
+
+                    'Summary' : {'pattern' : '',
+                                    'value' : 0},},
+
+        'Expense' : {'Food' : {'Restoraunts' : {'pattern' : '',
+                                                'value' : 0},
+
+                                'Delivery' : {'pattern' : '',
+                                                'value' : 0},
+
+                                'Grocer' : {'pattern' : '',
+                                            'value' : 0},},
+
+                     'Sport' : {'Trainings' : {'pattern' : '',
+                                                'value' : 0},
+
+                                'Equipment' : {'pattern' : '',
+                                                'value' : 0},},
+
+                     'Technique' : {'pattern' : '',
+                                    'value' : 0},
+
+                     'Clothes' : {'pattern' : '',
+                                    'value' : 0},      
+                        
+                    'Summary' : {'pattern' : '',
+                                    'value' : 0},},
+
+        'EndBalance' : {'pattern' : '',
+                        'value' : 0},}
+
+
+def keyPosThroughDict(object : dict, findData=['', 0, 0, 0, []]):
     '''
-    This function accepts a dictionary, a keyword of this dictionary and returns list of data
-    that filling in accordance with accepted keyword.
+    This function takes a dictionary and a list with the following properties:
+    [keyword for find,
+     treeLevel - higest branch of this would have a zero level
+     treeCurLevel - current level, must have zero value in starting
+     position - position number of keyword in chosen treeLevel, must have zero value in starting
+     positionList = [] positions of even keywords having a same treeLevel - empty in starting]
+    
     (Warning! This function is for use in Python 3.7 and lastest, in eariler version it's behavior is unpredictable)
 
-    :param object: Dictionary for read of that
-    :param keyword: The keyword that is being searched for 
-    :param isPrint: Allow printing the changes in dictionary if True, else False by default
-    :param outputData: List in wich data reads in accordance with keyword (shouldn't set!) Beeng utilized for internal needs.
+    :param object: Dictionary for take positions of that
+    :param findData: list with initial parameters of find and results of this find
 
-    :return: outputData list
+    :return: findData: list
     '''
-    outputData = [keyword, 
-                  treeLevel, 
-                  curTreeLevel,
-                  positionList]
+
     # if object is - dictionary, then analyze all values of dictionary for them keys
     if isinstance(object, dict):
-        position = 0
         for key in object:
             # Recursive function call to itself. Allows to go through the nested dictionary 
-            outputData = goOutThroughDict(object[key], outputData)
+            findData = keyPosThroughDict(object[key], findData)
             
-            keyword, treeLevel, curTreeLevel, positionList  = outputData
+            keyword, treeLevel, treeCurLevel, position, positionList  = findData
 
-            if curTreeLevel == treeLevel:
+            if treeCurLevel == treeLevel:
                 if key == keyword:
                     # Add the position number if keyword is finded
-                    outputData.append(position)
+                    positionList.append(position)
                 position += 1
-    # Returns list that contains data allocated in accordance with accepted keyword.
-    return outputData
+            
+            if key == 'pattern' or key == 'value':
+                treeCurLevel = 0
+        
+        treeCurLevel += 1
+        findData[2] = treeCurLevel
+        findData[3] = position
+
+    return findData
 
 
 
 
+findData = ['Summary', 1, 0, 0, []]
 
-#goOutThroughDict()
-keyword = 'pat'
+findedData = keyPosThroughDict(data, findData)
+
+print(findedData)
+
+'''keyword = 'pat'
 treeLevel = 1
 curTreeLevel = 0
 positionList = []
 
-outputData = [keyword, 
+findData = [keyword, 
               treeLevel, 
               curTreeLevel,
               positionList]
 
-keyword, treeLevel, curTreeLevel, positionList  = outputData
+keyword, treeLevel, curTreeLevel, positionList  = findData
 
 positionList.append(1) 
 
@@ -55,5 +105,5 @@ print(positionList)
 
 positionList.append(2) 
 
-print(positionList) 
+print(positionList) '''
 

@@ -128,24 +128,19 @@ def dataDictInit(regexPath : str):
 
 
 	# Find the positions of Base categories
-    incSumAbsPosition = None
-    for num,category in enumerate(data['Income']):
-        if category == 'Summary':
-            # Find the Income Summary position
-            incSumAbsPosition = num
+    findSumPosData = ['Summary', 1, 0, 0, []]
+    findedSumPosData = keyPosThroughDict(data, findSumPosData)
+
+    # List of 'Summary' key positions
+    sumPosList = findedSumPosData[4]
+
+    print('sumPosList = ', sumPosList)
+
+    # Find the Income Summary position
+    incSumAbsPosition = sumPosList[0]
     
-    expSumPosition = None
-    for num, category in enumerate(data['Expense']):
-        if category == 'Summary':
-            # Find the Expense Summary position
-            expSumPosition = num
-
-    if  incSumAbsPosition and expSumPosition:
-        expSumAbsPosition = incSumAbsPosition + expSumPosition + 1
-
-    else:
-        expSumAbsPosition = None
-        print('Summary category is not finded')
+    # Find the Expense Summary position
+    expSumAbsPosition = sumPosList[1]
 
     print('incSumAbsPosition ', incSumAbsPosition)	
     print('expSumAbsPosition ', expSumAbsPosition)
@@ -158,24 +153,27 @@ def dataDictInit(regexPath : str):
     except:
         print('Cannot open regex.txt to read at first')
 
-    print('strList = ', strList)
+    print('\nstrList:\n', *strList)
 
 	# Save open the regex.txt in write mod for includes regex of Base Categories
-    with open(regexPath, 'w', encoding='utf-8') as prgxw:
-        for nstr, string in enumerate(strList):
-            if nstr == incSumAbsPosition: 
-                prgxw.write('^\+\d*\s?\d+,\d\d$' + '\n') 
-            elif nstr == expSumAbsPosition:
-                prgxw.write('^\d*\s?\d+,\d\d$' + '\n')
-            else:
-                prgxw.write(strList[nstr])
+    try:
+        with open(regexPath, 'w', encoding='utf-8') as prgxw:
+            for nstr, string in enumerate(strList):
+                if nstr == incSumAbsPosition: 
+                    prgxw.write('^\+\d*\s?\d+,\d\d$' + '\n') 
+                elif nstr == expSumAbsPosition:
+                    prgxw.write('^\d*\s?\d+,\d\d$' + '\n')
+                else:
+                    prgxw.write(strList[nstr])
+    except:
+        print('Cannot open regex.txt to write')
 
 
 	# Save open the regex.txt in read mod
     with open(regexPath, 'r', encoding='utf-8') as prgx:
 	    # Creation a fixed length list 
         regexTuple = tuple([regLine.rstrip('\n') for regLine in prgx])
-        print('regexTuple = ', regexTuple)
+        print('\nregexTuple:', *regexTuple, sep='\n')
 
     # Fill the data dictionary fields for 'pattern' key
     goInputThroughDict(data, 'pattern',  regexTuple)
@@ -342,6 +340,48 @@ def goOutThroughDict(object : dict, keyword : str, isPrint=False, outputData=[])
                     print(object[key])
     # Returns list that contains data allocated in accordance with accepted keyword.
     return outputData
+
+
+def keyPosThroughDict(object : dict, findData=['', 0, 0, 0, []]):
+    '''
+    This function takes a dictionary and a list with the following properties:
+    [keyword for find,
+     treeLevel - higest branch of this would have a zero level
+     treeCurLevel - current level, must have zero value in starting
+     position - position number of keyword in chosen treeLevel, must have zero value in starting
+     positionList = [] positions of even keywords having a same treeLevel - empty in starting]
+    
+    (Warning! This function is for use in Python 3.7 and lastest, in eariler version it's behavior is unpredictable)
+
+    :param object: Dictionary for take positions of that
+    :param findData: list with initial parameters of find and results of this find
+
+    :return: findData: list
+    '''
+
+    # if object is - dictionary, then analyze all values of dictionary for them keys
+    if isinstance(object, dict):
+        for key in object:
+            # Recursive function call to itself. Allows to go through the nested dictionary 
+            findData = keyPosThroughDict(object[key], findData)
+            
+            keyword, treeLevel, treeCurLevel, position, positionList  = findData
+
+            if treeCurLevel == treeLevel:
+                if key == keyword:
+                    # Add the position number if keyword is finded
+                    positionList.append(position)
+                position += 1
+            
+            if key == 'pattern' or key == 'value':
+                treeCurLevel = 0
+        
+        treeCurLevel += 1
+        findData[2] = treeCurLevel
+        findData[3] = position
+
+    return findData
+
 
 
 

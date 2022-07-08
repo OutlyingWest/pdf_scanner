@@ -224,10 +224,16 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
 
                         # Summ values according order of regex 
                         valueList[numreg] += numdLine
+
+                        # Amount of over incomes
+                        valueList[incSumPosition] += numdLine
     
                     elif valueExpenceFinded and numreg >= numIncome:
                         print(valueExpenceFinded.group(), 'Exp')
                         valueList[numreg] += numdLine
+
+                        # Amount of over expenses
+                        valueList[expSumPosition] += numdLine
 
                     else:
                         print('Impossible find!!!')
@@ -252,7 +258,16 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
                         findExpr = False
                         findValue = True
                         break
-    print(valueList)
+
+    valueTuple = tuple(valueList)
+
+    print('valueTuple = ', valueTuple, end='\n\n')
+
+    # Filling the fields of dictionary 
+    goInputThroughDict(dictData, 'value', valueTuple)
+
+    print("\ndictData['Income']['Summary']['value'] = ", dictData['Income']['Summary']['value'])
+    print("dictData['Expense']['Summary']['value'] = ", dictData['Expense']['Summary']['value'], end='\n\n')
 
 
 def googleSpreadDrawer():

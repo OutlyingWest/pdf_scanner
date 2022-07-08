@@ -15,8 +15,8 @@ def main():
     '''
     pdfDocPath, dataTextPath, regexPath = getPath()
     # pdfToTextConv(pdfDocPath, dataTextPath)
-    dictData = dataDictInit(regexPath)
-    parserData(dataTextPath, dictData)
+    dictData, incSumPos, expSumPos = dataDictInit(regexPath)
+    parserData(dataTextPath, dictData, incSumPos, expSumPos)
     
 
 
@@ -137,13 +137,13 @@ def dataDictInit(regexPath : str):
     print('sumPosList = ', sumPosList)
 
     # Find the Income Summary position
-    incSumAbsPosition = sumPosList[0]
+    incSumPosition = sumPosList[0]
     
     # Find the Expense Summary position
-    expSumAbsPosition = sumPosList[1]
+    expSumPosition = sumPosList[1]
 
-    print('incSumAbsPosition ', incSumAbsPosition)	
-    print('expSumAbsPosition ', expSumAbsPosition)
+    print('incSumPosition ', incSumPosition)	
+    print('expSumPosition ', expSumPosition)
 
     try:
         strList = []
@@ -159,9 +159,9 @@ def dataDictInit(regexPath : str):
     try:
         with open(regexPath, 'w', encoding='utf-8') as prgxw:
             for nstr, string in enumerate(strList):
-                if nstr == incSumAbsPosition: 
+                if nstr == incSumPosition: 
                     prgxw.write('^\+\d*\s?\d+,\d\d$' + '\n') 
-                elif nstr == expSumAbsPosition:
+                elif nstr == expSumPosition:
                     prgxw.write('^\d*\s?\d+,\d\d$' + '\n')
                 else:
                     prgxw.write(strList[nstr])
@@ -178,10 +178,10 @@ def dataDictInit(regexPath : str):
     # Fill the data dictionary fields for 'pattern' key
     goInputThroughDict(data, 'pattern',  regexTuple)
 
-    return data
+    return data, incSumPosition, expSumPosition
 
 
-def parserData(textPath : str, dictData : dict):
+def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosition : int):
     '''
     This function open txt file with data extracted from PDF
     and allocate this into categories according to regular expressions by file regex.txt
@@ -196,10 +196,9 @@ def parserData(textPath : str, dictData : dict):
 
     # Getting keys located with accordance on higher level key - 'Income' and count them
     numIncome = len(dictData['Income'].keys())
-	
-    # Init the regex BaseGroup. Regexes in a BaseGroup will not findes as categories
-    exprBaseGroup = (dictData['Income']['Summary']['pattern'],
-					 dictData['Expense']['Summary']['pattern'],)
+
+    print("\ndictData['Income']['Summary']['pattern'] = ", dictData['Income']['Summary']['pattern'])
+    print("dictData['Expense']['Summary']['pattern'] = ", dictData['Expense']['Summary']['pattern'], end='\n\n')
 
     with open(textPath, 'r', encoding='utf-8') as ptxt:
         findExpr = True
@@ -240,17 +239,12 @@ def parserData(textPath : str, dictData : dict):
                 # It is regular expression search if form ("regular expression", "line of text file")
                 if findExpr:
 				
-    				# Checking is the current regex includes in the BaseGroup
-                    for exprBaseRegex in exprBaseGroup:
-                        exprBaseFinded = re.search(exprBaseRegex, line)
-                        if exprBaseFinded:
-                            break
-					
-					# If Base expression is not finded, find the other expressions
-                    if not exprBaseFinded: 
+					# If an expression is a special non finded, it should be skipped
+                    if numreg != incSumPosition and numreg != expSumPosition: 
                         exprFinded = re.search(regex, line)
 
-                    exprBaseFinded = False
+
+                    #exprBaseFinded = False
 
 					# If expression finded, go to summ in 'value' of finded category 	
                     if exprFinded:
@@ -269,7 +263,7 @@ def googleSpreadDrawer():
     pass
 
 
-# ------- Later may be in other module --------
+# ------- Later may be in an other module --------
 def goInputThroughDict(object : dict, keyword : str, inputData : tuple, isPrint=False, lengthData=None):
     '''
     This function accepts a dictionary, a keyword of this dictionary and a tuple of data

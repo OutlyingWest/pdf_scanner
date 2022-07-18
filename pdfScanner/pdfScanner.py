@@ -102,7 +102,7 @@ def dataDictInit(regexPath : str):
             'Expense' : {'Food' : {'Restoraunts' : {'pattern' : '',
                                                     'value' : 0},
 
-                                   'Ñanteen' : {'pattern' : '',
+                                   'Canteen' : {'pattern' : '',
                                                  'value' : 0},
 
                                    'Grocer' : {'pattern' : '',

@@ -157,9 +157,9 @@ def dataDictInit(regexPath : str):
         with open(regexPath, 'w', encoding='utf-8') as prgxw:
             for nstr, string in enumerate(strList):
                 if nstr == incSumPosition: 
-                    prgxw.write('^\+\d*\s?\d+,\d\d$' + '\n') 
+                    prgxw.write('Inc. Summary; ' + '^\+\d*\s?\d+,\d\d$' + '\n') 
                 elif nstr == expSumPosition:
-                    prgxw.write('^\d*\s?\d+,\d\d$' + '\n')
+                    prgxw.write('Exp. Summary; ' + '^\d*\s?\d+,\d\d$' + '\n')
                 else:
                     prgxw.write(strList[nstr])
     except:
@@ -169,7 +169,7 @@ def dataDictInit(regexPath : str):
 	# Save open the regex.txt in read mod
     with open(regexPath, 'r', encoding='utf-8') as prgx:
 	    # Creation a fixed length list 
-        regexTuple = tuple([regLine.rstrip('\n') for regLine in prgx])
+        regexTuple = tuple([regLine.rstrip('\n').replace(' ', '').split(';')[1] for regLine in prgx])
         print('\nregexTuple:', *regexTuple, sep='\n')
 
     # Fill the data dictionary fields for 'pattern' key

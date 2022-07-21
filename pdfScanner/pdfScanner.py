@@ -102,9 +102,6 @@ def dataDictInit(regexPath : str):
             'Expense' : {'Food' : {'Restoraunts' : {'pattern' : '',
                                                     'value' : 0},
 
-                                   'Canteen' : {'pattern' : '',
-                                                 'value' : 0},
-
                                    'Grocer' : {'pattern' : '',
                                                'value' : 0},},
 
@@ -195,7 +192,7 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
     valueList = [0] * len(regexTupl)
 
     # Getting keys located with accordance on higher level key - 'Income' and count them
-    numIncome = len(dictData['Income'].keys())
+    numIncome = len(dictData['Income'].keys()) - 1
 
     print("\ndictData['Income']['Summary']['pattern'] = ", dictData['Income']['Summary']['pattern'])
     print("dictData['Expense']['Summary']['pattern'] = ", dictData['Expense']['Summary']['pattern'], end='\n\n')
@@ -266,8 +263,9 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
     # Filling the fields of dictionary 
     goInputThroughDict(dictData, 'value', valueTuple)
 
-    print("\ndictData['Income']['Summary']['value'] = ", dictData['Income']['Summary']['value'])
-    print("dictData['Expense']['Summary']['value'] = ", dictData['Expense']['Summary']['value'], end='\n\n')
+    print("\ndictData['Expense']['Food']['Restoraunts']['pattern'] =", dictData['Expense']['Food']['Restoraunts']['pattern'])
+    print("\ndictData['Income']['Summary']['value'] =", dictData['Income']['Summary']['value'])
+    print("dictData['Expense']['Summary']['value'] =", dictData['Expense']['Summary']['value'], end='\n\n')
 
 
 def googleSpreadDrawer():

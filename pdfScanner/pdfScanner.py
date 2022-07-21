@@ -235,13 +235,12 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
                     else:
                         print('Impossible find!!!')
 
-		    # This cycle executes at first after starting, on next step findes the value
-            # Iterating over regular expressions 
-            for numreg, regex in enumerate(regexTupl):
+            # It is regular expression search if form ("regular expression", "line of text file")
+            if findExpr:
 
-                # It is regular expression search if form ("regular expression", "line of text file")
-                if findExpr:
-				
+                # This cycle executes at first after starting, on next step findes the value
+                # Iterating over regular expressions
+                for numreg, regex in enumerate(regexTupl):
 					# If an expression is a special non finded, it should be skipped
                     if numreg != incSumPosition and numreg != expSumPosition: 
                         exprFinded = re.search(regex, line)

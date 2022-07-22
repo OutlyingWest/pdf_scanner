@@ -3,10 +3,10 @@ Grants;       (^2$)|(.*[С|с]типендия.*)
 OtherProfit;  .*перевод.*|.*зачислен.*|.*поступлен.*
 Inc. Summary; ^\+\d*\s?\d+,\d\d$
 Restoraunts;  (.*[Р|р]естораны?.*)|(.*[К|к]афе.*)
-Grocer;       ^}$
-Trainings;    ^}$
-Equipment;    ^}$
-Technique;    ^}$
+Grocer;       .*[С|c]упермаркеты?.*
+Trainings;    (.*3841.+К.+АЛЕКСАНДР.*)|(.*BATUTNYJ?.*)
+Equipment;    (.*SPORTMASTER.*)|(.*DECATHLON.*)|(.*MEGASPORT.*)
+Technique;    (.*CITILINK.*)|(.*DNS.*)|(.*ELDORADO.*)
 Clothes;      ^}$
 Exp. Summary; ^\d*\s?\d+,\d\d$
 EndBalance;   ^}$

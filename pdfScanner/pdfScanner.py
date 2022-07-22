@@ -183,7 +183,6 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
     This function open txt file with data extracted from PDF
     and allocate this into categories according to regular expressions by file regex.txt
     '''
-    #TODO: Make a function of first cleaning 
     
 
 

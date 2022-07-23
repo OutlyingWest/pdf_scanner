@@ -259,7 +259,7 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
     print('valueTuple = ', valueTuple, end='\n\n')
 
     # Filling the fields of dictionary 
-    goInputThroughDict(dictData, 'value', valueTuple)
+    goInputThroughDict(dictData, 'value', valueTuple, True)
 
     print("\ndictData['Expense']['Food']['Restoraunts']['pattern'] =", dictData['Expense']['Food']['Restoraunts']['pattern'])
     print("\ndictData['Income']['Summary']['value'] =", dictData['Income']['Summary']['value'])

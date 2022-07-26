@@ -7,6 +7,6 @@ Grocer;       .*[С|c]упермаркеты?.*
 Trainings;    (.*3841\sК.\sАЛЕКСАНДР.*)|(.*BATUTNYJ?.*)
 Equipment;    (.*SPORTMASTER.*)|(.*DECATHLON.*)|(.*MEGASPORT.*)
 Technique;    (.*CITILINK.*)|(.*DNS.*)|(.*ELDORADO.*)
-Clothes;      ^}$
+Clothes;      .*[О|о]дежда?.*
 Exp. Summary; ^\d*\s?\d+,\d\d$
 EndBalance;   ^}$

@@ -289,9 +289,11 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
     # Filling the fields of dictionary 
     goInputThroughDict(dictData, 'value', valueTuple, True)
 
-    print("\ndictData['Expense']['Food']['Restoraunts']['pattern'] =", dictData['Expense']['Food']['Restoraunts']['pattern'])
+    dictData['EndBalance']['value'] = dictData['Income']['Summary']['value'] - dictData['Expense']['Summary']['value']
+
     print("\ndictData['Income']['Summary']['value'] =", dictData['Income']['Summary']['value'])
-    print("dictData['Expense']['Summary']['value'] =", dictData['Expense']['Summary']['value'], end='\n\n')
+    print("dictData['Expense']['Summary']['value'] =", dictData['Expense']['Summary']['value'])
+    print("dictData['EndBalance']['value'] =", dictData['EndBalance']['value'])
 
 
 def googleSpreadDrawer():

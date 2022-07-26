@@ -178,6 +178,31 @@ def dataDictInit(regexPath : str):
     return data, incSumPosition, expSumPosition
 
 
+def regIter(line, regexTupl, findExpr, findValue, incSumPosition, expSumPosition, startPos=0):
+    '''
+    Function that iterate over regex and compare each of their with a line
+    As a result return find flags and stored value of Expr line from last
+    step of main Parser loop.
+    '''
+    # This cycle executes at first after starting, on next step findes the value
+    # Iterating over regular expressions
+    regexTupl = regexTupl[startPos:]
+    lineStash = ''
+    for numreg, regex in enumerate(regexTupl):
+		# If an expression is a special non finded, it should be skipped
+        if numreg != incSumPosition and numreg != expSumPosition: 
+            exprFinded = re.search(regex, line)
+
+		# If expression finded, go to summ in 'value' of finded category 	
+        if exprFinded:
+            print(exprFinded.group())
+            findExpr = False
+            findValue = True
+            lineStash = line
+            break
+    return findExpr, findValue, numreg, lineStash
+
+
 def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosition : int):
     '''
     This function open txt file with data extracted from PDF
@@ -231,28 +256,30 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
                         # Amount of over expenses
                         valueList[expSumPosition] += numdLine
 
+                    elif valueExpenceFinded and numreg < numIncome:
+                        #_, findVl, numregex, _ = regIter(lineStash,
+                        #                                         regexTupl,
+                        #                                         findExpr,
+                        #                                         findValue,
+                        #                                         incSumPosition, expSumPosition,
+                        #                                         startPos=numIncome)
+                        #if findVl:
+                        #    print(valueExpenceFinded.group(), 'Exp')
+                        #    valueList[numregex] += numdLine
+                        pass
+
                     else:
                         print('Impossible find!!!')
 
             # It is regular expression search if form ("regular expression", "line of text file")
             if findExpr:
+                findExpr, findValue, numreg, lineStash = regIter(line,
+                                                                 regexTupl,
+                                                                 findExpr,
+                                                                 findValue,
+                                                                 incSumPosition, expSumPosition,
+                                                                 startPos=0)
 
-                # This cycle executes at first after starting, on next step findes the value
-                # Iterating over regular expressions
-                for numreg, regex in enumerate(regexTupl):
-					# If an expression is a special non finded, it should be skipped
-                    if numreg != incSumPosition and numreg != expSumPosition: 
-                        exprFinded = re.search(regex, line)
-
-
-                    #exprBaseFinded = False
-
-					# If expression finded, go to summ in 'value' of finded category 	
-                    if exprFinded:
-                        print(exprFinded.group())
-                        findExpr = False
-                        findValue = True
-                        break
 
     valueTuple = tuple(valueList)
 

@@ -264,6 +264,9 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
                         valueList[expSumPosition] += numdLine
 
                     elif valueExpenceFinded and numreg < numIncome:
+                        # Program can go to this case if some Income regex was finded
+                        # but value has not a literal '+' - it means that program will
+                        # finde this regex through Expense categories   
                         _, findVl, numregex, _ = regIter(lineStash,
                                                                  regexTupl,
                                                                  findExpr,

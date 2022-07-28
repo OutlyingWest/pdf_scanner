@@ -34,7 +34,7 @@ def getPath():
     pdfDocPath = progPath + 'Document-2022-05-16-192805.pdf'
     # path to txt file (in the same with the script directory)
     dataTextPath = progPath + 'dataText.txt'
-    regexPath = progPath + 'regex.txt'
+    regexPath = progPath + 'regex.csv'
     return pdfDocPath, dataTextPath, regexPath
 
 
@@ -67,7 +67,7 @@ def dataDictInit(regexPath : str):
     '''
      This function of initialisation of data dictionary.
      Initialisation comprise regular expressions for all categories.
-     Regular expressions keeps in the text file named regex.txt.
+     Regular expressions keeps in the text file named regex.csv.
 
      Structure of the data dictionary:
      Income:
@@ -154,11 +154,11 @@ def dataDictInit(regexPath : str):
             for string in prgxr:
                 strList.append(string)	
     except:
-        print('Cannot open regex.txt to read at first')
+        print('Cannot open regex.csv to read at first')
 
     print('\nstrList:\n', *strList)
 
-	# Save open the regex.txt in write mod for includes regex of Base Categories
+	# Save open the regex.csv in write mod for includes regex of Base Categories
     try:
         with open(regexPath, 'w', encoding='utf-8') as prgxw:
             for nstr, string in enumerate(strList):
@@ -169,10 +169,10 @@ def dataDictInit(regexPath : str):
                 else:
                     prgxw.write(strList[nstr])
     except:
-        print('Cannot open regex.txt to write')
+        print('Cannot open regex.csv to write')
 
 
-	# Save open the regex.txt in read mod
+	# Save open the regex.csv in read mod
     with open(regexPath, 'r', encoding='utf-8') as prgx:
 	    # Creation a fixed length list 
         regexTuple = tuple([regLine.rstrip('\n').replace(' ', '').split(';')[1] for regLine in prgx])
@@ -213,7 +213,7 @@ def regIter(line, regexTupl, findExpr, findValue, incSumPosition, expSumPosition
 def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosition : int):
     '''
     This function open txt file with data extracted from PDF
-    and allocate this into categories according to regular expressions by file regex.txt
+    and allocate this into categories according to regular expressions by file regex.csv
     '''
     
 

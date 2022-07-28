@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-# import fitz
 import re
+import fitz
 
 def main():
     '''
@@ -14,7 +14,7 @@ def main():
     End result may be presented in table with drop-down lists of detailed incomes and expenses
     '''
     pdfDocPath, dataTextPath, regexPath = getPath()
-    # pdfToTextConv(pdfDocPath, dataTextPath)
+    pdfToTextConv(pdfDocPath, dataTextPath)
     dictData, incSumPos, expSumPos = dataDictInit(regexPath)
     parserData(dataTextPath, dictData, incSumPos, expSumPos)
     

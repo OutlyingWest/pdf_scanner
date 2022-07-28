@@ -105,11 +105,17 @@ def dataDictInit(regexPath : str):
                                    'Grocer' : {'pattern' : '',
                                                'value' : 0},},
 
+                         'Health' : {'pattern' : '',
+                                      'value' : 0},  
+
                          'Sport' : {'Trainings' : {'pattern' : '',
                                                    'value' : 0},
 
                                     'Equipment' : {'pattern' : '',
                                                     'value' : 0},},
+
+                         'Transport' : {'pattern' : '',
+                                        'value' : 0},
 
                          'Technique' : {'pattern' : '',
                                         'value' : 0},
@@ -284,7 +290,7 @@ def parserData(textPath : str, dictData : dict, incSumPosition : int, expSumPosi
 
     valueTuple = tuple(valueList)
 
-    print('valueTuple = ', valueTuple, end='\n\n')
+    print('valueTuple =', valueTuple, end='\n\n')
 
     # Filling the fields of dictionary 
     goInputThroughDict(dictData, 'value', valueTuple, True)

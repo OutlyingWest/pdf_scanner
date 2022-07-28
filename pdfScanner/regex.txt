@@ -1,12 +1,14 @@
 Wages;        (^1$)|(.*[З|з]аработ\w+\sплат\w.*)|(.*[З|з]арплат\w.*)
-Grants;       (^2$)|(.*[С|с]типендия.*)
+Grants;       (^2$)|(.*[С|с]типенди[я|и].*)
 OtherProfit;  (.*перевод.*)|(.*зачислен.*)|(.*поступлен.*)
 Inc. Summary; ^\+\d*\s?\d+,\d\d$
 Restoraunts;  (.*[Р|р]естораны?.*)|(.*[К|к]афе.*)
 Grocer;       .*[С|c]упермаркеты?.*
+Health;       .*[З|з]доровье\sи\sкрасота.*
 Trainings;    (.*3841\sК.\sАЛЕКСАНДР.*)|(.*BATUTNYJ?.*)
-Equipment;    (.*SPORTMASTER.*)|(.*DECATHLON.*)|(.*MEGASPORT.*)
+Equipment;    (.*DECATHLON.*)|(.*MEGASPORT.*)|(.*YANDEX.*)
+Transport;    (.*[Т|т]ранспорт.*)|(.*TAX.*)|(.*tax.*)
 Technique;    (.*CITILINK.*)|(.*DNS.*)|(.*ELDORADO.*)
-Clothes;      .*[О|о]дежда?.*
+Clothes;      (.*[О|о]дежд[а|ы]?.*)|(.*SPORTMASTER.*)
 Exp. Summary; ^\d*\s?\d+,\d\d$
 EndBalance;   ^}$

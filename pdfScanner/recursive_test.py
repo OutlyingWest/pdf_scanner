@@ -79,31 +79,9 @@ def keyPosThroughDict(object : dict, findData=['', 0, 0, 0, []]):
     return findData
 
 
+with open('tree.csv', 'r', encoding='utf-8') as fl:
+    for line in fl:
+        splitedLine = line.rstrip('\n').replace(' ', '').split(';')
+        print(splitedLine)
 
-
-findData = ['Summary', 1, 0, 0, []]
-
-findedData = keyPosThroughDict(data, findData)
-
-print(findedData)
-
-'''keyword = 'pat'
-treeLevel = 1
-curTreeLevel = 0
-positionList = []
-
-findData = [keyword, 
-              treeLevel, 
-              curTreeLevel,
-              positionList]
-
-keyword, treeLevel, curTreeLevel, positionList  = findData
-
-positionList.append(1) 
-
-print(positionList) 
-
-positionList.append(2) 
-
-print(positionList) '''
 

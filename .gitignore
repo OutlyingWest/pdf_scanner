@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # vim temp. files
 *.un~
+
+# Ignore all in venv
+venv/*
